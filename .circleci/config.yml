@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  deploy:
+    docker:
+      - image: cimg/python:3.9
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install AWS CLI
+          command: pip install awscli
+
+      - run:
+          name: Deploy to S3
+          command: |
+            aws s3 sync . s3://faiz-static-site --delete --exclude ".git/*"
+
+workflows:
+  deploy-workflow:
+    jobs:
+      - deploy
